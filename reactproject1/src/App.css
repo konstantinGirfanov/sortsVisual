@@ -39,6 +39,8 @@
 
 .card {
     display: flex;
+    border-color: red;
+    border-width: 5px;
 }
 
 .read-the-docs {
