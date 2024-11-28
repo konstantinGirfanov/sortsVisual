@@ -26,6 +26,7 @@ body {
   margin: 0;
   display: flex;
   justify-content: space-around;
+  width: 100px;
 }
 
 h1 {
