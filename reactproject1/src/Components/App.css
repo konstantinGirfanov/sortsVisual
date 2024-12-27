@@ -1,24 +1,9 @@
 body {
-    max-width: 100%;
+    width: 100%;
+    height: 100%;
 }
 
-.root {
-    display: flex;
-    justify-content: space-between;
-}
-
-#controlPanel{
-    padding: 0 50px 0 0;
-}
-
-#controlPanel input {
-    margin: 20px;
-}
-
-.elements-сontainer {
-    display: flex;
-    align-items: end;
-    gap: 2px;
-    background-color: white;
-    min-width: 100%;
+#root {
+    width: 100%;
+    height: 100%;
 }

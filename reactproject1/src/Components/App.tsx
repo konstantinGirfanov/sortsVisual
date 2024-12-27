@@ -1,47 +1,68 @@
-//import * as React from 'react';
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef, useState, useEffect } from 'react';
 import './App.css';
 import SortElements from './SortElements';
+import styled from 'styled-components';
+import MyInput from './MyInput';
 
+const Root = styled.div`
+        display: flex;
+        justify-content: space-between;
+        max-width: 100%;
+        height: 100%;
+    `
+const InputsContainer = styled.div`
+        display: block;
+        width: 10%;
+    `
+const SortButton = styled.button`
+        width: 70px;
+        height: 30px;
+    `
 
 function App() {
 
-    const [data] = useState({ count: 100, maxElement: 10000, delayMs: 10 });
+    const countInputElementRef = useRef(null);
+    const maxInputElementRef = useRef(null);
+    const delayInputElementRef = useRef(null);
+
+    const [elementsCount, setElementsCount] = useState('100');
+    const [maxRelativeElementSize, setMaxRelativeElementSize] = useState('100');
+    const [sortDelay, setSortDelay] = useState('10');
+
+    useEffect(() => {
+        countInputElementRef.current.focus();
+    }, [elementsCount]);
+
+    useEffect(() => {
+        maxInputElementRef.current.focus();
+    }, [maxRelativeElementSize]);
+
+    useEffect(() => {
+        delayInputElementRef.current.focus();
+    }, [sortDelay]);
+
+    const onClickHandler = () => {
+
+    }
 
     return (
-        <>
-            <div className="root">
-                <div className='input-container'>
-                    <form>
-                        <label>Количество элементов</label>
-                        <input
-                            type="text"
-                            value={data.count}
-                            id="elementsCount"
-                            onChange={(e) => { data.count = parseInt(e.target.value) }}></input>
-                        <label>Максимальный элемент</label>
-                        <input
-                            type="text"
-                            value={data.maxElement}
-                            id="maxElement"
-                            onChange={(e) => { data.maxElement = parseInt(e.target.value) }}></input>
-                        <label>Задержка между шагами(мс)</label>
-                        <input
-                            type="text"
-                            value={data.delayMs}
-                            id="delayBetweenSteps"
-                            onChange={(e) => { data.delayMs = parseInt(e.target.value) }}></input>
-                        <input type="submit"></input>
-                    </form>
-                </div >
+        <Root>
+            <InputsContainer>
+                <label>Количество элементов</label>
+                <MyInput value={elementsCount} setValue={setElementsCount} inputRef={countInputElementRef} maxCount={512} />
+                <label>Максимальный элемент</label>
+                <MyInput value={maxRelativeElementSize} setValue={setMaxRelativeElementSize} inputRef={maxInputElementRef} maxCount={null} />
+                <label>Задержка между шагами(мс)</label>
+                <MyInput value={sortDelay} setValue={setSortDelay} inputRef={delayInputElementRef} maxCount={null} />
+                <SortButton onClick={onClickHandler} />
+            </InputsContainer>
 
-                <SortElements
-                    count={data.count}
-                    maxElement={data.maxElement}
-                    delayMs={data.delayMs}>
-                </SortElements>
-            </div>
-        </>
+            <SortElements
+                count={parseInt(elementsCount)}
+                maxElement={parseInt(maxRelativeElementSize)}>
+            </SortElements>
+        </Root>
     );
 }
 

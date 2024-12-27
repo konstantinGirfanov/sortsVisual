@@ -1,4 +1,4 @@
-import { useState } from "react";
+import styled from "styled-components";
 
 type ElementInfo = {
     i: number;
@@ -7,21 +7,21 @@ type ElementInfo = {
     relativeMaxElementHeight: number;
     maxElementHeight: number;
     containerWidth: number;
+    color: string;
 }
+
+const Element = styled.span`
+`
 
 export default function SortElement(props: ElementInfo) {
 
-    const [element, setElementInfo] = useState({ info: props, color: 'black' });
-
     return (
-        <span
-            id={element.info.i.toString()}
+        <Element
             style={{
-                backgroundColor: element.color,
-                height: `${(element.info.value / element.info.relativeMaxElementHeight * element.info.maxElementHeight).toString()}px`,
-                width: `${element.info.containerWidth / element.info.count}px`
-            }
-            }>
-        </span>
+                backgroundColor: props.color,
+                height: `${(props.value / props.relativeMaxElementHeight * props.maxElementHeight).toString()}px`,
+                width: `${props.containerWidth / props.containerWidth + 2}px`
+            }}>
+        </Element>
     );
 }
