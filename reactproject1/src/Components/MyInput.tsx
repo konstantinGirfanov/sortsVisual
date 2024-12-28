@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+const Input = styled.input`
+    cursor: text;
+    `
+
 export default function MyInput({value, setValue, inputRef, maxCount}) {
 
     const handleCount = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -9,9 +13,6 @@ export default function MyInput({value, setValue, inputRef, maxCount}) {
         }
         setValue(newValue.toString());
     };
-
-    const Input = styled.input`
-    `
     return (
         <Input value={value} onChange={handleCount} ref={inputRef} />
   );

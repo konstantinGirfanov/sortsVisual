@@ -1,12 +1,9 @@
 import styled from "styled-components";
 
 type ElementInfo = {
-    i: number;
     value: number;
-    count: number;
     relativeMaxElementHeight: number;
     maxElementHeight: number;
-    containerWidth: number;
     color: string;
 }
 
@@ -20,7 +17,7 @@ export default function SortElement(props: ElementInfo) {
             style={{
                 backgroundColor: props.color,
                 height: `${(props.value / props.relativeMaxElementHeight * props.maxElementHeight).toString()}px`,
-                width: `${props.containerWidth / props.containerWidth + 2}px`
+                width: `${4}px`
             }}>
         </Element>
     );
