@@ -3,8 +3,10 @@ import { useRef, useState, useEffect } from 'react';
 import './App.css';
 import SortElements from './SortElements';
 import styled from 'styled-components';
-import MyInput from './MyInput';
-import {BubbleSort, MergeSort} from '../sorts';
+import MyInput from './Inputs/MyInput';
+import SortButton from './Inputs/SortButton';
+import SelectInput from './Inputs/SelectInput';
+import {BubbleSort} from '../sorts';
 
 const Root = styled.div`
         display: flex;
@@ -16,14 +18,6 @@ const Root = styled.div`
 const InputsContainer = styled.div`
         display: block;
         width: 10%;
-    `
-const SortButton = styled.button`
-        width: 150px;
-        height: 70px;
-    `
-const SelectInput = styled.select`
-        width: 150px;
-        height: 30px;
     `
 
 function GetRandomValue(min: number, max: number) {
@@ -89,26 +83,6 @@ export default function App() {
         })()
     }, [steps]);
 
-    const onClickHandler = () => {
-        const steps: SortElement[][] = sortMethod.getSteps(data);
-
-        setSteps([...steps,
-        Array.from(steps[steps.length - 1], (e) => {
-            return { num: e.num, color: '#5CCCCC' };
-        })]);
-    }
-
-    const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        switch (e.target.value) {
-            case 'bubble':
-                setSortMethod({ name: 'bubble', getSteps: BubbleSort.GetSortSteps });
-                break;
-            case 'merge':
-                setSortMethod({ name: 'merge', getSteps: MergeSort.GetSortSteps });
-                break;
-        }
-    }
-
     return (
         <Root>
             <InputsContainer>
@@ -118,12 +92,8 @@ export default function App() {
                 <MyInput value={maxRelativeElementSize} setValue={setMaxRelativeElementSize} inputRef={max} maxCount={null} />
                 <label>Задержка между шагами(мс)</label>
                 <MyInput value={sortDelay} setValue={setSortDelay} inputRef={delay} maxCount={null} />
-                <SelectInput onChange={onChangeHandler} value={sortMethod.name}>
-                    {['bubble', 'merge'].map(e => {
-                        return <option value={e}>{e}</option>;
-                    }) }
-                </SelectInput>
-                <SortButton onClick={onClickHandler}>СОРТИР ОВКА</SortButton>
+                <SelectInput sortMethod={sortMethod} setSortMethod={setSortMethod} />
+                <SortButton data={data} sortMethod={sortMethod} setSteps={setSteps} />
             </InputsContainer>
 
             <SortElements
