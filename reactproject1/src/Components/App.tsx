@@ -20,7 +20,10 @@ const InputsContainer = styled.div`
 const SortButton = styled.button`
         width: 150px;
         height: 70px;
-        justify-self: center;
+    `
+const SelectInput = styled.select`
+        width: 150px;
+        height: 30px;
     `
 
 function GetRandomValue(min: number, max: number) {
@@ -39,16 +42,20 @@ const useInputRefs = () => {
     return { count: countInputElementRef, max: maxInputElementRef, delay: delayInputElementRef};
 }
 
-function App() {
+const GetRandomArray = (elementsCount: string, maxRelativeElementSize: string): SortElement[] => {
+    return Array.from({ length: parseInt(elementsCount) },
+        () => { return { num: GetRandomValue(0, parseInt(maxRelativeElementSize)), color: '#5CCCCC' } });
+}
+
+export default function App() {
     const { count, max, delay } = useInputRefs();
 
-    const [elementsCount, setElementsCount] = useState('10');
+    const [elementsCount, setElementsCount] = useState('100');
     const [maxRelativeElementSize, setMaxRelativeElementSize] = useState('500');
-    const [sortDelay, setSortDelay] = useState('1');
-    const [data, setData] = useState(
-        Array.from({ length: parseInt(elementsCount) },
-            () => { return { num: GetRandomValue(0, parseInt(maxRelativeElementSize)), color: '#5CCCCC' }})
-    );
+    const [sortMethod, setSortMethod] = useState({name: 'bubble', getSteps: BubbleSort.GetSortSteps});
+    const [sortDelay, setSortDelay] = useState('5');
+
+    const [data, setData] = useState(GetRandomArray(elementsCount, maxRelativeElementSize));
     const [steps, setSteps] = useState<SortElement[][]>([]);
 
     useEffect(() => {
@@ -70,16 +77,8 @@ function App() {
     }, [delay, sortDelay]);
 
     useEffect(() => {
-        setData(
-            Array.from({ length: parseInt(elementsCount) },
-                () => { return { num: GetRandomValue(0, parseInt(maxRelativeElementSize)), color: '#5CCCCC' } })
-        );
-    }, [elementsCount, maxRelativeElementSize]);
-
-    const onClickHandler = () => {
-        MergeSort.GetSortSteps(data, 0, data.length, data);
-        setSteps(MergeSort.newSteps);
-    }
+        setData(GetRandomArray(elementsCount, maxRelativeElementSize));
+    }, [elementsCount, maxRelativeElementSize, sortMethod]);
 
     useEffect(() => {
         (async () => {
@@ -87,9 +86,28 @@ function App() {
                 setData(stepElements);
                 await new Promise(resolve => setTimeout(resolve, parseInt(sortDelay)));
             }
-            MergeSort.newSteps = [];
         })()
     }, [steps]);
+
+    const onClickHandler = () => {
+        const steps: SortElement[][] = sortMethod.getSteps(data);
+
+        setSteps([...steps,
+        Array.from(steps[steps.length - 1], (e) => {
+            return { num: e.num, color: '#5CCCCC' };
+        })]);
+    }
+
+    const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        switch (e.target.value) {
+            case 'bubble':
+                setSortMethod({ name: 'bubble', getSteps: BubbleSort.GetSortSteps });
+                break;
+            case 'merge':
+                setSortMethod({ name: 'merge', getSteps: MergeSort.GetSortSteps });
+                break;
+        }
+    }
 
     return (
         <Root>
@@ -100,6 +118,11 @@ function App() {
                 <MyInput value={maxRelativeElementSize} setValue={setMaxRelativeElementSize} inputRef={max} maxCount={null} />
                 <label>Задержка между шагами(мс)</label>
                 <MyInput value={sortDelay} setValue={setSortDelay} inputRef={delay} maxCount={null} />
+                <SelectInput onChange={onChangeHandler} value={sortMethod.name}>
+                    {['bubble', 'merge'].map(e => {
+                        return <option value={e}>{e}</option>;
+                    }) }
+                </SelectInput>
                 <SortButton onClick={onClickHandler}>СОРТИР ОВКА</SortButton>
             </InputsContainer>
 
@@ -111,5 +134,3 @@ function App() {
         </Root>
     );
 }
-
-export default App

@@ -8,17 +8,15 @@ export class BubbleSort {
 
         for (let j = nums.length - 1; j > 0; j--) {
             for (let i = 0; i < j; i++) {
-                const newNumbers: SortElement[] = Array.from(nums, (e) => { return { num: e, color: '#5CCCCC' } });
-                newNumbers[i].color = 'red';
-                newNumbers[i + 1].color = 'red';
-                newSteps.push(newNumbers);
 
                 if (nums[i] > nums[i + 1]) {
                     const temp = nums[i];
                     nums[i] = nums[i + 1];
                     nums[i + 1] = temp;
 
-                    const newNumbers: SortElement[] = Array.from(nums, (e) => { return { num: e, color: '#5CCCCC' } });
+                    const newNumbers: SortElement[] = Array.from(nums, (e) => {
+                        return { num: e, color: '#5CCCCC' }
+                    });
                     newNumbers[i].color = 'green';
                     newNumbers[i + 1].color = 'green';
                     newSteps.push(newNumbers);
@@ -31,7 +29,13 @@ export class BubbleSort {
 }
 
 export class MergeSort {
-    public static newSteps: SortElement[][] = [];
+    private static newSteps: SortElement[][] = [];
+
+    public static GetSteps() {
+        const steps: SortElement[][] = Array.from(MergeSort.newSteps);
+        MergeSort.newSteps = [];
+        return steps;
+    }
 
     private static CreateStep(index: number, element: SortElement, beginArray: SortElement[]): void {
 
@@ -39,13 +43,7 @@ export class MergeSort {
             num: element.num,
             color: element.color
         };
-        this.newSteps.push(
-            Array.from(beginArray, (e, index) => {
-                return {
-                    num: e.num,
-                    color: index === index - 1 ? 'green' : '#5CCCCC'
-                };
-            }));
+        this.newSteps.push(Array.from(beginArray));
     }
 
     static merge(left: SortElement[], right: SortElement[], beginArray: SortElement[], lIndex: number) {
@@ -57,32 +55,27 @@ export class MergeSort {
         while (leftIndex < left.length && rightIndex < right.length) {
             if (left[leftIndex].num < right[rightIndex].num) {
                 resultArray.push(left[leftIndex]);
-                leftIndex++;
+                this.CreateStep(lIndex + ++leftIndex + rightIndex, resultArray[resultArray.length - 1], beginArray);
             } else {
                 resultArray.push(right[rightIndex]);
-                rightIndex++;
+                this.CreateStep(lIndex + leftIndex + ++rightIndex, resultArray[resultArray.length - 1], beginArray);
             }
-            this.CreateStep(lIndex + leftIndex + rightIndex, resultArray[resultArray.length - 1], beginArray);
-
-            console.log(this.newSteps);
         }
 
         while (leftIndex < left.length) {
             resultArray.push(left[leftIndex]);
-            leftIndex++;
-            this.CreateStep(lIndex + leftIndex + rightIndex, resultArray[resultArray.length - 1], beginArray);
+            this.CreateStep(lIndex + ++leftIndex + rightIndex, resultArray[resultArray.length - 1], beginArray);
         }
         
         while (rightIndex < right.length) {
             resultArray.push(right[rightIndex]);
-            rightIndex++;
-            this.CreateStep(lIndex + leftIndex + rightIndex, resultArray[resultArray.length - 1], beginArray);
+            this.CreateStep(lIndex + leftIndex + ++rightIndex, resultArray[resultArray.length - 1], beginArray);
         }
 
         return resultArray;
     }
 
-    public static GetSortSteps(data: SortElement[],
+    public static MergeSort(data: SortElement[],
         leftIndex: number,
         rightIndex: number,
         beginData: SortElement[]): SortElement[] {
@@ -101,10 +94,15 @@ export class MergeSort {
         const leftArray = data.slice(0, middle);
         const rightArray = data.slice(middle);
 
-        return this.merge(this.GetSortSteps(leftArray, leftIndex, middle, beginData),
-            this.GetSortSteps(rightArray, leftIndex + middle, rightIndex, beginData),
+        return this.merge(this.MergeSort(leftArray, leftIndex, middle, beginData),
+            this.MergeSort(rightArray, leftIndex + middle, rightIndex, beginData),
             beginData, leftIndex);
+    }
 
-        //return newSteps;
+    public static GetSortSteps(data: SortElement[]): SortElement[][] {
+        MergeSort.MergeSort(data, 0, data.length, data);
+        const steps = MergeSort.GetSteps();
+        MergeSort.newSteps = [];
+        return steps;
     }
 }
