@@ -1,14 +1,14 @@
 import SortElement from "./SortElement";
 import {styled} from 'styled-components';
 
-type Bebra = {
+type ElementInfo = {
     num: number;
     color: string;
 }
 
 type SortElementsProps = {
     maxElement: number;
-    data: Bebra[];
+    data: ElementInfo[];
 };
 
 const Elements = styled.div`
@@ -25,7 +25,7 @@ export default function SortElements(props: SortElementsProps) {
     
     return (
         <Elements>
-            {props.data.map((value: Bebra, i: number) => (
+            {props.data.map((value: ElementInfo, i: number) => (
                 <SortElement
                     key={i}
                     value={value.num}
