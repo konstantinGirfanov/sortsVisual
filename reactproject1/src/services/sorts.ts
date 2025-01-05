@@ -1,10 +1,11 @@
-import {SortElement} from '../src/Components/App';
+import {SortElementInfo} from "../types/data.ts";
+
 export class BubbleSort {
 
-    public static GetSortSteps(data: SortElement[]): SortElement[][] {
+    public static GetSortSteps(data: SortElementInfo[]): SortElementInfo[][] {
         const nums = Array.from(data,
             (data) => { return data.num });
-        const newSteps: SortElement[][] = [];
+        const newSteps: SortElementInfo[][] = [];
 
         for (let j = nums.length - 1; j > 0; j--) {
             for (let i = 0; i < j; i++) {
@@ -14,7 +15,7 @@ export class BubbleSort {
                     nums[i] = nums[i + 1];
                     nums[i + 1] = temp;
 
-                    const newNumbers: SortElement[] = Array.from(nums, (e) => {
+                    const newNumbers: SortElementInfo[] = Array.from(nums, (e) => {
                         return { num: e, color: '#5CCCCC' }
                     });
                     newNumbers[i].color = 'green';
@@ -29,15 +30,15 @@ export class BubbleSort {
 }
 
 export class MergeSort {
-    private static newSteps: SortElement[][] = [];
+    private static newSteps: SortElementInfo[][] = [];
 
     public static GetSteps() {
-        const steps: SortElement[][] = Array.from(MergeSort.newSteps);
+        const steps: SortElementInfo[][] = Array.from(MergeSort.newSteps);
         MergeSort.newSteps = [];
         return steps;
     }
 
-    private static CreateStep(index: number, element: SortElement, beginArray: SortElement[]): void {
+    private static CreateStep(index: number, element: SortElementInfo, beginArray: SortElementInfo[]): void {
 
         beginArray[index - 1] = {
             num: element.num,
@@ -46,7 +47,7 @@ export class MergeSort {
         this.newSteps.push(Array.from(beginArray));
     }
 
-    static merge(left: SortElement[], right: SortElement[], beginArray: SortElement[], lIndex: number) {
+    private static merge(left: SortElementInfo[], right: SortElementInfo[], beginArray: SortElementInfo[], lIndex: number) {
 
         const resultArray = [];
         let leftIndex = 0,
@@ -75,10 +76,10 @@ export class MergeSort {
         return resultArray;
     }
 
-    public static MergeSort(data: SortElement[],
+    public static MergeSort(data: SortElementInfo[],
         leftIndex: number,
         rightIndex: number,
-        beginData: SortElement[]): SortElement[] {
+        beginData: SortElementInfo[]): SortElementInfo[] {
 
         const nums: number[] = Array.from(data, (data) => { return data.num });
         
@@ -99,8 +100,8 @@ export class MergeSort {
             beginData, leftIndex);
     }
 
-    public static GetSortSteps(data: SortElement[]): SortElement[][] {
-        MergeSort.MergeSort(data, 0, data.length, data);
+    public static GetSortSteps(data: SortElementInfo[]): SortElementInfo[][] {
+        MergeSort.MergeSort(data, 0, data.length, [...data]);
         const steps = MergeSort.GetSteps();
         MergeSort.newSteps = [];
         return steps;

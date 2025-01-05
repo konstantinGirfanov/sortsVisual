@@ -1,15 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState, useEffect } from 'react';
-import './App.css';
-import SortElements from './SortElements';
+import {useEffect} from 'react';
+import '../assets/App.css';
+import SortElements from './sorting/SortElements.tsx';
 import styled from 'styled-components';
 import MyInput from './Inputs/MyInput';
 import SortButton from './Inputs/SortButton';
 import SelectInput from './Inputs/SelectInput';
-import {BubbleSort} from '../sorts';
+import {useInputRefs} from "../hooks/refs.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {
+    setData,
+    setElementsCount,
+    setMaxRelativeElementSize,
+    setSortDelay
+} from "../store/appSlice.ts";
+import {RootState} from "../store/store.ts";
 
 const Root = styled.div`
-        display: flex;
+        display: flex; 
         justify-content: space-between;
         width: 100%;
         height: 100%;
@@ -20,64 +28,30 @@ const InputsContainer = styled.div`
         width: 10%;
     `
 
-function GetRandomValue(min: number, max: number) {
-    return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min))
-};
-
-export type SortElement = {
-    num: number;
-    color: string;
-}
-
-const useInputRefs = () => {
-    const countInputElementRef = useRef(null);
-    const maxInputElementRef = useRef(null);
-    const delayInputElementRef = useRef(null);
-    return { count: countInputElementRef, max: maxInputElementRef, delay: delayInputElementRef};
-}
-
-const GetRandomArray = (elementsCount: string, maxRelativeElementSize: string): SortElement[] => {
-    return Array.from({ length: parseInt(elementsCount) },
-        () => { return { num: GetRandomValue(0, parseInt(maxRelativeElementSize)), color: '#5CCCCC' } });
-}
-
 export default function App() {
+
     const { count, max, delay } = useInputRefs();
-
-    const [elementsCount, setElementsCount] = useState('100');
-    const [maxRelativeElementSize, setMaxRelativeElementSize] = useState('500');
-    const [sortMethod, setSortMethod] = useState({name: 'bubble', getSteps: BubbleSort.GetSortSteps});
-    const [sortDelay, setSortDelay] = useState('5');
-
-    const [data, setData] = useState(GetRandomArray(elementsCount, maxRelativeElementSize));
-    const [steps, setSteps] = useState<SortElement[][]>([]);
+    const dispatch = useDispatch();
+    const elementsCount = useSelector((state: RootState) => state.app.elementsCount);
+    const maxRelativeElementSize = useSelector((state: RootState) => state.app.maxRelativeElementSize);
+    const sortDelay = useSelector((state: RootState) => state.app.sortDelay);
+    const data = useSelector((state: RootState) => state.app.data);
+    const steps = useSelector((state: RootState) => state.app.steps);
 
     useEffect(() => {
-        if (count.current) {
-            count.current.focus();
-        }
+        count.current?.focus();
     }, [count, elementsCount]);
-
     useEffect(() => {
-        if (max.current) {
-            max.current.focus();
-        }
+        max.current?.focus();
     }, [max, maxRelativeElementSize]);
-
     useEffect(() => {
-        if (delay.current) {
-            delay.current.focus();
-        }
+        delay.current?.focus();
     }, [delay, sortDelay]);
 
     useEffect(() => {
-        setData(GetRandomArray(elementsCount, maxRelativeElementSize));
-    }, [elementsCount, maxRelativeElementSize, sortMethod]);
-
-    useEffect(() => {
         (async () => {
-            for (const stepElements of steps) {
-                setData(stepElements);
+            for (const step of steps) {
+                dispatch(setData(step));
                 await new Promise(resolve => setTimeout(resolve, parseInt(sortDelay)));
             }
         })()
@@ -87,20 +61,16 @@ export default function App() {
         <Root>
             <InputsContainer>
                 <label>Количество элементов</label>
-                <MyInput value={elementsCount} setValue={setElementsCount} inputRef={count} maxCount={512} />
+                <MyInput value={elementsCount} setValue={(value) => dispatch(setElementsCount(value))} inputRef={count} maxCount={512} />
                 <label>Максимальный элемент</label>
-                <MyInput value={maxRelativeElementSize} setValue={setMaxRelativeElementSize} inputRef={max} maxCount={null} />
+                <MyInput value={maxRelativeElementSize} setValue={(value) => dispatch(setMaxRelativeElementSize(value))} inputRef={max} />
                 <label>Задержка между шагами(мс)</label>
-                <MyInput value={sortDelay} setValue={setSortDelay} inputRef={delay} maxCount={null} />
-                <SelectInput sortMethod={sortMethod} setSortMethod={setSortMethod} />
-                <SortButton data={data} sortMethod={sortMethod} setSteps={setSteps} />
+                <MyInput value={sortDelay} setValue={(value) => dispatch(setSortDelay(value))} inputRef={delay} />
+                <SelectInput />
+                <SortButton data={data} />
             </InputsContainer>
 
-            <SortElements
-                maxElement={parseInt(maxRelativeElementSize)}
-                data={data}
-            >
-            </SortElements>
+            <SortElements maxElement={parseInt(maxRelativeElementSize)} data={data} ></SortElements>
         </Root>
     );
 }

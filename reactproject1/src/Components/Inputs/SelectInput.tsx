@@ -1,41 +1,26 @@
 import styled from "styled-components";
-import { SortElement } from '../App';
-import { BubbleSort, MergeSort } from '../../sorts';
+import React from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store/store.ts";
+import {setSortMethod} from "../../store/appSlice.ts";
 
 const Input = styled.select`
         width: 150px;
         height: 30px;
     `
 
-type SelectInfo = {
-    sortMethod: {
-        name: string;
-        getSteps: (data: SortElement[]) => SortElement[][];
-    },
-
-    setSortMethod: React.Dispatch<React.SetStateAction<{
-        name: string;
-        getSteps: (data: SortElement[]) => SortElement[][];
-    }>>
-}
-
-export default function SelectInput({ sortMethod, setSortMethod }: SelectInfo) {
+export default function SelectInput() {
+    const sortMethod:string = useSelector((state:RootState) => state.app.sortMethod);
+    const dispatch = useDispatch();
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        switch (e.target.value) {
-            case 'bubble':
-                setSortMethod({ name: 'bubble', getSteps: BubbleSort.GetSortSteps });
-                break;
-            case 'merge':
-                setSortMethod({ name: 'merge', getSteps: MergeSort.GetSortSteps });
-                break;
-        }
+        dispatch(setSortMethod(e.target.value));
     }
 
     return (
-        <Input onChange={onChangeHandler} value={sortMethod.name}>
-            {['bubble', 'merge'].map(e => {
-                return <option value={e}>{e}</option>;
+        <Input onChange={onChangeHandler} value={sortMethod}>
+            {['bubble', 'merge'].map((value, index) => {
+                return <option key={index} value={value}>{value}</option>;
             })}
         </Input>
     );

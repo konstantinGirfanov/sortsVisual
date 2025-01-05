@@ -1,4 +1,4 @@
-import SortElement from "./SortElement";
+import SortElement from "./SortElement.tsx";
 import {styled} from 'styled-components';
 
 type ElementInfo = {
