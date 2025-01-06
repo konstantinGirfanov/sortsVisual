@@ -1,22 +1,22 @@
 import styled from "styled-components";
 import {SortElementInfo} from "../../types/data.ts";
 import {useDispatch, useSelector} from "react-redux";
-import { setSteps } from "../../store/appSlice.ts";
+import {setSteps} from "../../store/appSlice.ts";
 import {RootState} from "../../store/store.ts";
 import {BubbleSort, MergeSort} from "../../services/sorts.ts";
 
 const SortButton = styled.button`
-        width: 150px;
-        height: 70px;
-    `
+    width: 150px;
+    height: 70px;
+`
 
 type Data = {
     data: SortElementInfo[];
 }
 
-export default function MyInput({data}:Data) {
+export default function MyInput({data}: Data) {
     const dispatch = useDispatch();
-    const sortMethod :string = useSelector((state: RootState) => state.app.sortMethod);
+    const sortMethod: string = useSelector((state: RootState) => state.app.sortMethod);
 
     const onClickHandler = () => {
         let steps: SortElementInfo[][];

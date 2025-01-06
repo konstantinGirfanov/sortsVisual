@@ -5,6 +5,8 @@ const GetRandomValue = (min: number, max: number) => {
 }
 
 export const GetRandomArray = (elementsCount: string, maxRelativeElementSize: string): SortElementInfo[] => {
-    return Array.from({ length: parseInt(elementsCount) },
-        () => { return { num: GetRandomValue(0, parseInt(maxRelativeElementSize)), color: '#5CCCCC' } });
+    return Array.from({length: parseInt(elementsCount)},
+        () => {
+            return {num: GetRandomValue(0, parseInt(maxRelativeElementSize)), color: '#5CCCCC'}
+        });
 }

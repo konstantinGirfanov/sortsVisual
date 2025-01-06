@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { GetRandomArray } from '../services/Numbers.ts';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {GetRandomArray} from '../services/Numbers.ts';
 import {SortElementInfo} from "../types/data.ts";
 
 interface AppState {
@@ -49,5 +49,12 @@ const appSlice = createSlice({
     },
 });
 
-export const { setElementsCount, setMaxRelativeElementSize, setSortDelay, setSteps, setData, setSortMethod } = appSlice.actions;
+export const {
+    setElementsCount,
+    setMaxRelativeElementSize,
+    setSortDelay,
+    setSteps,
+    setData,
+    setSortMethod
+} = appSlice.actions;
 export default appSlice.reducer;

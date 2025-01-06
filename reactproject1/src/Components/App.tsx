@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useEffect} from 'react';
 import '../assets/App.css';
 import SortElements from './sorting/SortElements.tsx';
@@ -17,20 +16,21 @@ import {
 import {RootState} from "../store/store.ts";
 
 const Root = styled.div`
-        display: flex; 
-        justify-content: space-between;
-        width: 100%;
-        height: 100%;
-        gap: 60px;
-    `
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    gap: 60px;
+`
 const InputsContainer = styled.div`
-        display: block;
-        width: 10%;
-    `
+    display: block;
+    width: 10%;
+`
 
 export default function App() {
 
-    const { count, max, delay } = useInputRefs();
+    const {count, max, delay} = useInputRefs();
+    
     const dispatch = useDispatch();
     const elementsCount = useSelector((state: RootState) => state.app.elementsCount);
     const maxRelativeElementSize = useSelector((state: RootState) => state.app.maxRelativeElementSize);
@@ -55,22 +55,24 @@ export default function App() {
                 await new Promise(resolve => setTimeout(resolve, parseInt(sortDelay)));
             }
         })()
-    }, [steps]);
+    }, [dispatch, sortDelay, steps]);
 
     return (
         <Root>
             <InputsContainer>
                 <label>Количество элементов</label>
-                <MyInput value={elementsCount} setValue={(value) => dispatch(setElementsCount(value))} inputRef={count} maxCount={512} />
+                <MyInput value={elementsCount} setValue={(value) => dispatch(setElementsCount(value))} inputRef={count}
+                         maxCount={512}/>
                 <label>Максимальный элемент</label>
-                <MyInput value={maxRelativeElementSize} setValue={(value) => dispatch(setMaxRelativeElementSize(value))} inputRef={max} />
+                <MyInput value={maxRelativeElementSize} setValue={(value) => dispatch(setMaxRelativeElementSize(value))}
+                         inputRef={max}/>
                 <label>Задержка между шагами(мс)</label>
-                <MyInput value={sortDelay} setValue={(value) => dispatch(setSortDelay(value))} inputRef={delay} />
-                <SelectInput />
-                <SortButton data={data} />
+                <MyInput value={sortDelay} setValue={(value) => dispatch(setSortDelay(value))} inputRef={delay}/>
+                <SelectInput/>
+                <SortButton data={data}/>
             </InputsContainer>
 
-            <SortElements maxElement={parseInt(maxRelativeElementSize)} data={data} ></SortElements>
+            <SortElements maxElement={parseInt(maxRelativeElementSize)} data={data}></SortElements>
         </Root>
     );
 }

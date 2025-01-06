@@ -5,12 +5,12 @@ import {RootState} from "../../store/store.ts";
 import {setSortMethod} from "../../store/appSlice.ts";
 
 const Input = styled.select`
-        width: 150px;
-        height: 30px;
-    `
+    width: 150px;
+    height: 30px;
+`
 
 export default function SelectInput() {
-    const sortMethod:string = useSelector((state:RootState) => state.app.sortMethod);
+    const sortMethod: string = useSelector((state: RootState) => state.app.sortMethod);
     const dispatch = useDispatch();
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {

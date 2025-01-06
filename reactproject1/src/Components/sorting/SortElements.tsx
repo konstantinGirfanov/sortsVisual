@@ -22,7 +22,7 @@ const Elements = styled.div`
 `;
 
 export default function SortElements(props: SortElementsProps) {
-    
+
     return (
         <Elements>
             {props.data.map((value: ElementInfo, i: number) => (

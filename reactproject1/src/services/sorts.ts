@@ -4,7 +4,9 @@ export class BubbleSort {
 
     public static GetSortSteps(data: SortElementInfo[]): SortElementInfo[][] {
         const nums = Array.from(data,
-            (data) => { return data.num });
+            (data) => {
+                return data.num
+            });
         const newSteps: SortElementInfo[][] = [];
 
         for (let j = nums.length - 1; j > 0; j--) {
@@ -16,7 +18,7 @@ export class BubbleSort {
                     nums[i + 1] = temp;
 
                     const newNumbers: SortElementInfo[] = Array.from(nums, (e) => {
-                        return { num: e, color: '#5CCCCC' }
+                        return {num: e, color: '#5CCCCC'}
                     });
                     newNumbers[i].color = 'green';
                     newNumbers[i + 1].color = 'green';
@@ -67,7 +69,7 @@ export class MergeSort {
             resultArray.push(left[leftIndex]);
             this.CreateStep(lIndex + ++leftIndex + rightIndex, resultArray[resultArray.length - 1], beginArray);
         }
-        
+
         while (rightIndex < right.length) {
             resultArray.push(right[rightIndex]);
             this.CreateStep(lIndex + leftIndex + ++rightIndex, resultArray[resultArray.length - 1], beginArray);
@@ -77,20 +79,24 @@ export class MergeSort {
     }
 
     public static MergeSort(data: SortElementInfo[],
-        leftIndex: number,
-        rightIndex: number,
-        beginData: SortElementInfo[]): SortElementInfo[] {
+                            leftIndex: number,
+                            rightIndex: number,
+                            beginData: SortElementInfo[]): SortElementInfo[] {
 
-        const nums: number[] = Array.from(data, (data) => { return data.num });
-        
+        const nums: number[] = Array.from(data, (data) => {
+            return data.num
+        });
+
         if (nums.length === 1) {
             this.newSteps.push(
                 Array.from(beginData, (e, index) => {
-                    return { num: e.num, color: index === leftIndex ? 'green' : '#5CCCCC' };
+                    return {num: e.num, color: index === leftIndex ? 'green' : '#5CCCCC'};
                 }));
-            return Array.from(nums, (e) => { return { num: e, color: 'green' } });
+            return Array.from(nums, (e) => {
+                return {num: e, color: 'green'}
+            });
         }
-        
+
         const middle = Math.floor(data.length / 2);
         const leftArray = data.slice(0, middle);
         const rightArray = data.slice(middle);

@@ -3,7 +3,7 @@ import React, {RefObject} from "react";
 
 const Input = styled.input`
     cursor: text;
-    `
+`
 
 type InputProps = {
     value: string,
@@ -12,7 +12,7 @@ type InputProps = {
     maxCount?: number
 }
 
-export default function MyInput({value, setValue, inputRef, maxCount}:InputProps) {
+export default function MyInput({value, setValue, inputRef, maxCount}: InputProps) {
 
     const handleCount = (e: React.ChangeEvent<HTMLInputElement>) => {
         let newValue = parseInt(e.target.value.replace(/\D/g, ''));
@@ -23,6 +23,6 @@ export default function MyInput({value, setValue, inputRef, maxCount}:InputProps
     };
 
     return (
-        <Input value={value} onChange={handleCount} ref={inputRef} />
-  );
+        <Input value={value} onChange={handleCount} ref={inputRef}/>
+    );
 }
