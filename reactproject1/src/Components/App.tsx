@@ -8,6 +8,7 @@ import SelectInput from './Inputs/SelectInput';
 import {useInputRefs} from "../hooks/refs.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {
+    changeSortingState,
     setData,
     setElementsCount,
     setMaxRelativeElementSize,
@@ -23,14 +24,15 @@ const Root = styled.div`
     gap: 60px;
 `
 const InputsContainer = styled.div`
-    display: block;
-    width: 10%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    width: 17%;
 `
 
 export default function App() {
 
     const {count, max, delay} = useInputRefs();
-    
     const dispatch = useDispatch();
     const elementsCount = useSelector((state: RootState) => state.app.elementsCount);
     const maxRelativeElementSize = useSelector((state: RootState) => state.app.maxRelativeElementSize);
@@ -49,25 +51,25 @@ export default function App() {
     }, [delay, sortDelay]);
 
     useEffect(() => {
+        dispatch(changeSortingState());
         (async () => {
             for (const step of steps) {
                 dispatch(setData(step));
                 await new Promise(resolve => setTimeout(resolve, parseInt(sortDelay)));
             }
+            dispatch(changeSortingState());
         })()
     }, [dispatch, sortDelay, steps]);
 
     return (
         <Root>
             <InputsContainer>
-                <label>Количество элементов</label>
                 <MyInput value={elementsCount} setValue={(value) => dispatch(setElementsCount(value))} inputRef={count}
-                         maxCount={512}/>
-                <label>Максимальный элемент</label>
+                         maxCount={512} label={"Количество элементов"}/>
                 <MyInput value={maxRelativeElementSize} setValue={(value) => dispatch(setMaxRelativeElementSize(value))}
-                         inputRef={max}/>
-                <label>Задержка между шагами(мс)</label>
-                <MyInput value={sortDelay} setValue={(value) => dispatch(setSortDelay(value))} inputRef={delay}/>
+                         inputRef={max} label={"Максимальный элемент"}/>
+                <MyInput value={sortDelay} setValue={(value) => dispatch(setSortDelay(value))} inputRef={delay}
+                         label={"Задержка между шагами(мс)"}/>
                 <SelectInput/>
                 <SortButton data={data}/>
             </InputsContainer>

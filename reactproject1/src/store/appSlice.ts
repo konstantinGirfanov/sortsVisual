@@ -9,6 +9,7 @@ interface AppState {
     sortMethod: string;
     data: SortElementInfo[];
     steps: SortElementInfo[][];
+    isSorting: boolean;
 }
 
 const initialState: AppState = {
@@ -18,6 +19,7 @@ const initialState: AppState = {
     sortMethod: 'bubble',
     data: GetRandomArray('55', '500'),
     steps: [],
+    isSorting: false
 };
 
 const appSlice = createSlice({
@@ -45,6 +47,9 @@ const appSlice = createSlice({
         setSortMethod(state, action: PayloadAction<string>) {
             state.sortMethod = action.payload;
             state.data = GetRandomArray(state.elementsCount, state.maxRelativeElementSize);
+        },
+        changeSortingState(state) {
+            state.isSorting = !state.isSorting;
         }
     },
 });
@@ -55,6 +60,7 @@ export const {
     setSortDelay,
     setSteps,
     setData,
-    setSortMethod
+    setSortMethod,
+    changeSortingState
 } = appSlice.actions;
 export default appSlice.reducer;

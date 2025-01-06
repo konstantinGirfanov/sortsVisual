@@ -1,27 +1,24 @@
-import styled from "styled-components";
-import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store/store.ts";
 import {setSortMethod} from "../../store/appSlice.ts";
-
-const Input = styled.select`
-    width: 150px;
-    height: 30px;
-`
+import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
 
 export default function SelectInput() {
     const sortMethod: string = useSelector((state: RootState) => state.app.sortMethod);
+    const isSorting: boolean = useSelector((state: RootState) => state.app.isSorting);
     const dispatch = useDispatch();
 
-    const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChangeHandler = (e: SelectChangeEvent) => {
         dispatch(setSortMethod(e.target.value));
     }
 
     return (
-        <Input onChange={onChangeHandler} value={sortMethod}>
-            {['bubble', 'merge'].map((value, index) => {
-                return <option key={index} value={value}>{value}</option>;
-            })}
-        </Input>
+        <FormControl fullWidth>
+            <InputLabel id="label">Сортировка</InputLabel>
+            <Select onChange={onChangeHandler} value={sortMethod} label="Сортировка" disabled={isSorting}>
+                <MenuItem value={'bubble'}>bubble</MenuItem>
+                <MenuItem value={'merge'}>merge</MenuItem>
+            </Select>
+        </FormControl>
     );
 }

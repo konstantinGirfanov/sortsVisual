@@ -4,9 +4,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {setSteps} from "../../store/appSlice.ts";
 import {RootState} from "../../store/store.ts";
 import {BubbleSort, MergeSort} from "../../services/sorts.ts";
+import {LoadingButton} from "@mui/lab";
 
-const SortButton = styled.button`
-    width: 150px;
+const SortButton = styled(LoadingButton)`
+    width: 100%;
     height: 70px;
 `
 
@@ -17,6 +18,7 @@ type Data = {
 export default function MyInput({data}: Data) {
     const dispatch = useDispatch();
     const sortMethod: string = useSelector((state: RootState) => state.app.sortMethod);
+    const isSorting: boolean = useSelector((state: RootState) => state.app.isSorting);
 
     const onClickHandler = () => {
         let steps: SortElementInfo[][];
@@ -36,6 +38,8 @@ export default function MyInput({data}: Data) {
     }
 
     return (
-        <SortButton onClick={onClickHandler}>СОРТИР ОВКА</SortButton>
+        <SortButton loading={isSorting} loadingIndicator="Сортировка..." variant="outlined" onClick={onClickHandler}>
+            СОРТИР ОВКА
+        </SortButton>
     );
 }
